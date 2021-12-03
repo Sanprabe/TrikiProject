@@ -1,26 +1,16 @@
-import react from "react";
+// import react from "react";
 import { Square } from "./square";
-import { GameContext } from './gameContext';
 
 
 
 function Board (props) {
 
-    const {isPlayerX, winner} = react.useContext(GameContext);
-
     function renderSquare(i) {
         return <Square value={i} />;
     }
 
-    const mensajeGanador = 'Winner: ' + winner;
-    const nextPlayer = isPlayerX? 'Next player: X':'Next Player: O';
-
     return (
     <div>
-        <div className="status">
-            {winner != null && mensajeGanador}
-            {winner == null && nextPlayer}
-        </div>
         <div className="board-row">
         {renderSquare(0)}
         {renderSquare(1)}

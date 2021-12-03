@@ -1,22 +1,15 @@
 import React from 'react';
-import Board from './board';
 
 import {GameProvider} from './gameContext';
+import {GameUI} from './gameUI';
+
 
 function Game () {
 
-
     return (
+        // Organize the components used in the game
         <GameProvider>
-            <div className="game">
-                <div className="game-board">
-                <Board />
-                </div>
-                <div className="game-info">
-                <div>{/* status */}</div>
-                <ol>{/* TODO */}</ol>
-                </div>
-            </div>
+            <GameUI />
         </GameProvider>
     );
 }

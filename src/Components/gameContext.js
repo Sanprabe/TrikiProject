@@ -1,23 +1,11 @@
 import react from "react";
-const GameContext = react.createContext(new Array(9).fill(null));
 
+const GameContext = react.createContext();
+
+// Has all the logic of the game in a context so it can be used in all child components
 function GameProvider(props){
-    const [board, setBoard] = react.useState(new Array(9).fill(null));
-    const [isPlayerX, setIsPlayerX] = react.useState(true);
-    const [winner, setWinner] = react.useState(null);
-
-    const onClickBox = (index) => {
-        if ((board[index] != null) || winner != null) return
-        
-        const newBoard = [...board];
-        let nextPlayer;
-        nextPlayer = isPlayerX? 'X': 'O';
-        newBoard[index] = nextPlayer;
-        
-        setBoard(newBoard);
-        setIsPlayerX(prev => !prev);
-    }
-
+    
+    // Imported from react Docs - Checks if there's a winner
     function calculateWinner(squares) {
         const lines = [
           [0, 1, 2],
@@ -38,15 +26,61 @@ function GameProvider(props){
         return null;
       }
 
-      react.useEffect(() => {
+    // Use state to have track of whats going on
+    const emptyBoard = new Array(9).fill(null);
+    const [board, setBoard] = react.useState(emptyBoard);
+    const [isPlayerX, setIsPlayerX] = react.useState(true);
+    const [winner, setWinner] = react.useState(null);
+    const [history, setHistory] = react.useState([]);
+    
+    
+    // Runs everytime user cliks a square
+    const onClickBox = (index) => {
+        if ((board[index] != null) || winner != null) return
+        
+        const newBoard = [...board];
+        let nextPlayer;
+        nextPlayer = isPlayerX? 'X': 'O';
+        newBoard[index] = nextPlayer;
+        
+        setBoard(newBoard);
+        setIsPlayerX(prev => !prev);
+    }
+
+    const goPrevMovement = (i) => {
+        
+        console.log(history[i]);
+        
+        let tempHistory;
+        tempHistory = [...history];
+        tempHistory = tempHistory.slice(0, i + 1);
+
+        setBoard(history[i]);
+        setHistory([...tempHistory]);
+    }
+
+    // Runs every time board re-render
+    react.useEffect(() => {
+
+        // console.log('board', board);
+
+        let tempHistory;
+
+        tempHistory = [...history, board];
+
+        setHistory([...tempHistory]);
+
+        // console.log('history', history);
+        
         if (calculateWinner(board)){
             setWinner(calculateWinner(board));
         }
 
-      }, [board])
+    }, [board])
 
 
     return(
+        // Returns all variables that need to be used by child components
         <GameContext.Provider
             value={
                 {
@@ -54,7 +88,9 @@ function GameProvider(props){
                     setBoard,
                     onClickBox,
                     isPlayerX,
-                    winner
+                    winner,
+                    history,
+                    goPrevMovement
                 }
             }
         
