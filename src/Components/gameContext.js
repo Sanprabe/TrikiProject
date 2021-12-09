@@ -28,6 +28,7 @@ function GameProvider(props){
 
     // Use state to have track of whats going on
     const emptyBoard = new Array(9).fill(null);
+
     const [board, setBoard] = react.useState(emptyBoard);
     const [isPlayerX, setIsPlayerX] = react.useState(true);
     const [winner, setWinner] = react.useState(null);
@@ -43,10 +44,12 @@ function GameProvider(props){
         nextPlayer = isPlayerX? 'X': 'O';
         newBoard[index] = nextPlayer;
         
+        // setWinner(null)
         setBoard(newBoard);
         setIsPlayerX(prev => !prev);
     }
 
+    // Runs everytime user cliks ButtonHistory
     const goPrevMovement = (i) => {
         
         console.log(history[i]);
@@ -55,8 +58,17 @@ function GameProvider(props){
         tempHistory = [...history];
         tempHistory = tempHistory.slice(0, i + 1);
 
+        if ( i % 2 == 0 ){
+            setIsPlayerX(true);
+            setWinner(null);
+        }else{
+            setIsPlayerX(false);
+            setWinner(null);
+        }
+
         setBoard(history[i]);
         setHistory([...tempHistory]);
+
     }
 
     // Runs every time board re-render
@@ -75,6 +87,8 @@ function GameProvider(props){
         if (calculateWinner(board)){
             setWinner(calculateWinner(board));
         }
+
+        console.log(history);
 
     }, [board])
 
