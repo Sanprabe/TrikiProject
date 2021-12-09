@@ -7,7 +7,8 @@ import { ButtonHistory } from './buttonHistory';
 function GameUI () {
 
     function renderButtonHistory(i, key){
-        return < ButtonHistory index={i} key={key} array={key} />;
+        // Pass key as unique identifier for the component
+        return <ButtonHistory index={i} key={key}/>; 
     }
 
     const {
@@ -16,11 +17,12 @@ function GameUI () {
         history
         } = react.useContext(GameContext);
 
+    // Messages depending of the state of winner
     const mensajeGanador = 'Winner: ' + winner;
     const nextPlayer = isPlayerX? 'Next player: X':'Next Player: O';
 
     const historyDisplay = [...history];
-    historyDisplay.pop();
+    historyDisplay.pop(); // This avoid that the current board appears as a history button
 
     return (
         // Organize the components used in the game
@@ -30,11 +32,12 @@ function GameUI () {
             </div>
             <div className="game-info">
             <div className="status">
-                {winner != null && mensajeGanador}
-                {winner == null && nextPlayer}
+                {winner && mensajeGanador}
+                {!winner && nextPlayer}
             </div>
             <ol>
                 {
+                    // Render all the history buttons on the screen (Not lat one)
                     historyDisplay.map((arr, index) => (
                         renderButtonHistory(index, arr)
                     ))
